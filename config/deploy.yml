@@ -1,0 +1,29 @@
+# Statische Seite, deployt wie die Rails-Apps: Kamal baut das nginx-Image aus
+# dem Dockerfile und laesst es als Hauptservice auf dem X1 laufen. kamal-proxy
+# routet per Host-Header, TLS terminiert nginx auf dem Pi (add-site.sh).
+service: forestparty
+image: forestparty
+
+servers:
+  web:
+    - 51.154.22.115
+
+proxy:
+  ssl: false
+  hosts:
+    # Erst mal auf der planet10-Subdomain; spaeter forestparty.ch + www
+    # eintragen, sobald deren DNS hierher zeigt.
+    - forestparty.planet10.ch
+
+registry:
+  server: localhost:5555
+
+aliases:
+  logs: app logs -f
+  shell: app exec --interactive --reuse "sh"
+
+builder:
+  arch: amd64
+
+ssh:
+  user: serverman
